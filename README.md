@@ -19,7 +19,7 @@ example
     });
     
     $(document)
-        .on('success', '#form_test', function (e, $form, response) {
+        .on('success', '#form_test', function (e, $form, responseJSON) {
             // do something
         })
         .on('error', '#form_test', function (e, $form, responseJSON) {
