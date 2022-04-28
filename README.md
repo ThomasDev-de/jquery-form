@@ -14,6 +14,6 @@ example
 </form>
 
 <script>
-$('form').form();
+    $('form').form();
 </script>
 ```
