@@ -2,12 +2,12 @@
 
 A jQuery plugin for forms
 
-### REQUIREMENTS
+## REQUIREMENTS
 
 - bootstrap >= 5.0
 - jQuery >= 3.6
 
-### USAGE
+## USAGE
 
 ```html
 <form action="/path/to/action" methos="post" id="form_example">
@@ -20,7 +20,7 @@ A jQuery plugin for forms
 </script>
 ```
 
-### OPTIONS
+## OPTIONS
 
 ```js
 const DEFAULTS = {
@@ -34,7 +34,7 @@ const DEFAULTS = {
 }
 ```
 
-### EVENTS
+## EVENTS
 ```javascript
 $(document)
     .on('success', '#form_example', function (e, $form, responseJSON) {
@@ -60,7 +60,7 @@ $(document)
     });
 ```
 
-### ERROR HANDLING
+## ERROR HANDLING
 
 The plugin expects error messages as JSON object.  
 The key must match the input name field and the value should contain the error message.  
