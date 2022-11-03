@@ -16,7 +16,7 @@ A jQuery plugin for forms
 
 <script src="dist/jquery.form.js"></script>
 <script>
-    $('#form_example').form();
+    $('#form_example').form(options);
 </script>
 ```
 
