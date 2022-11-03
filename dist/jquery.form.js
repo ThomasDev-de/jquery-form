@@ -6,7 +6,13 @@
 (function ($) {
     $.fn.form = function (options) {
         let setup = $.extend(true, {
-            resetOnModalHidden: true
+            resetOnModalHidden: true,
+            onBeforeSend: function(form, xhr){},
+            onSuccess: function(form, response){},
+            onError: function(form, errors){},
+            onComplete: function(form, response){},
+            onCleared: function(form){},
+            onInit: function(form){},
         }, options || {});
 
         function setRequired(form) {
@@ -83,23 +89,27 @@
                     btnHtml = submitButton.html();
                     submitButton.html('<i class="fa-solid fa-spinner fa-spin fa-fw"></i>')
                     submitButton.prop('disabled', true).addClass('disabled');
-                    form.trigger('beforeSend', [form]);
-                    // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    form.trigger('beforeSend', [xhr, form]);
+                    setup.onBeforeSend(form, xhr);
                 },
                 success: function (response) {
                     form.trigger('success', [form, response || {}]);
+                    setup.onSuccess(form, response);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    setErrors(form, jqXHR.responseJSON || {});
-                    form.trigger('error', [form, jqXHR.responseJSON || {}]);
-
+                    let errors = jqXHR.responseJSON || {};
+                    setErrors(form, errors);
+                    form.trigger('error', [form, errors]);
+                    setup.onError(form, errors);
                 },
                 complete: function (jqXHR, textStatus) {
+                    let data = jqXHR.responseJSON || {};
                     submitButton
                         .prop('disabled', false)
                         .removeClass('disabled')
                         .html(btnHtml);
-                    form.trigger('complete', [form, jqXHR.responseJSON || {}]);
+                    form.trigger('complete', [form, data]);
+                    setup.onComplete(form, data);
                 }
             });
         }
@@ -111,6 +121,7 @@
             form.find('.invalid-feedback').remove();
             form.find('.js-form-default-error').remove();
             form.trigger('cleared', [form]);
+            setup.onCleared(form);
         }
 
         function init(form) {
@@ -120,6 +131,7 @@
                 events(form);
                 form.trigger('init', [form]);
                 form.addClass('js-form-init');
+                setup.onInit(form);
             }
         }
 
