@@ -1,6 +1,6 @@
 /**
  * @version 1.00
- * @since 2022-04-28
+ * @since 2022-10-28
  * @author Thomas Kirsch <t.kirsch@webcito.de>
  */
 (function ($) {
@@ -94,7 +94,7 @@
                 },
                 success: function (response) {
                     form.trigger('success', [form, response || {}]);
-                    setup.onSuccess(form, response);
+                    setup.onSuccess(form, response || {});
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     let errors = jqXHR.responseJSON || {};
