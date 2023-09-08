@@ -8,6 +8,7 @@
 (function ($) {
     $.fn.form = function (options) {
         let setup = $.extend(true, {
+            autocomplete:false,
             resetOnModalHidden: true,
             onBeforeSend: function (form, xhr) {
             },
@@ -178,7 +179,14 @@
 
         function init(form) {
             if (!form.hasClass('js-form-init')) {
-                form.attr('autocomplete', 'off');
+                if (!setup.autocomplete) {
+                    form
+                        .prop('autocorrect', "off")
+                        .prop('autocapitalize', "off")
+                        .prop('autocomplete', "off");
+                    form.find('input:visible').prop('autocomplete', "off");
+                    form.find('input[type="password"]').prop('autocomplete', "new-password");
+                }
                 setStyleOnHead();
                 setRequired(form);
                 events(form);

@@ -24,6 +24,7 @@ A jQuery plugin for forms
 
 ```js
 const DEFAULTS = {
+    autocomplete: false, // Sets all input fields to autocomplete off
     resetOnModalHidden: true, // If the form element is in a modal, it will be reset after the modal is hidden
     onBeforeSend: function(form, xhr){},
     onSuccess: function(form, response){},
