@@ -10,7 +10,7 @@ A jQuery plugin for forms
 ## USAGE
 
 ```html
-<form action="/path/to/action" methos="post" id="form_example">
+<form action="/path/to/action" method="post" id="form_example">
     <input type="text" required class="form-control" name="name">
 </form>
 
@@ -30,6 +30,7 @@ const DEFAULTS = {
     onError: function(form, errors){},
     onComplete: function(form, response){},
     onCleared: function(form){},
+    onReset: function(event, form){},
     onInit: function(form){},
 }
 ```
@@ -37,25 +38,31 @@ const DEFAULTS = {
 ## EVENTS
 ```javascript
 $(document)
-    .on('success', '#form_example', function (e, $form, responseJSON) {
+    .on('success', '#form_example', function (event, $form, responseJSON) {
         // do something
     })
-    .on('error', '#form_example', function (e, $form, responseJSON) {
+    .on('error', '#form_example', function (event, $form, responseJSON, xhr) {
         // do something
     })
-    .on('beforeSend', '#form_example', function (e, xhr, $form) {
+    .on('beforeSend', '#form_example', function (event, xhr, $form) {
         // do something
     })
-    .on('complete', '#form_example', function (e, $form, responseJSON) {
+    .on('complete', '#form_example', function (event, $form, responseJSON) {
         // do something
     })
-    .on('cleared', '#form_example', function (e, $form) {
+    .on('cleared', '#form_example', function (event, $form) {
         // do something
     })
-    .on('init', '#form_example', function (e, $form) {
+    .on('resetting', '#form_example', function (event, $form) {
+        // do something
+    })
+    .on('init', '#form_example', function (event, $form) {
         // do something
     })
     .on('error', '#form_example [name="name"]', function (e, $inputElement, message) {
+        // do something
+    })
+    .on('any', '#form_example', function (e, eventName) {
         // do something
     });
 ```

@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedReference,JSUnusedGlobalSymbols
+
 /**
  * @version 1.00
  * @since 2022-10-28
@@ -7,27 +9,59 @@
     $.fn.form = function (options) {
         let setup = $.extend(true, {
             resetOnModalHidden: true,
-            onBeforeSend: function(form, xhr){},
-            onSuccess: function(form, response){},
-            onError: function(form, errors){},
-            onComplete: function(form, response){},
-            onCleared: function(form){},
-            onInit: function(form){},
+            onBeforeSend: function (form, xhr) {
+            },
+            onSuccess: function (form, response) {
+            },
+            onError: function (form, errors) {
+            },
+            onComplete: function (form, response) {
+            },
+            onCleared: function (form) {
+            },
+            onReset: function (form) {
+            },
+            onInit: function (form) {
+            },
         }, options || {});
 
         function setRequired(form) {
             form
                 .find('input[required],textarea[required],select[required]')
-                .each(function (i, e) {
-                    $(this).prev('label').addClass('required');
+                .each(function (i, el) {
+                    const element = $(el);
+
+                    if(element.attr('id') && form.find('[for="'+element.attr('id')+'"]').length){
+                        form.find('[for="'+element.attr('id')+'"]').addClass('required');
+                    }
+
+                    else if( element.prev('label').length) {
+                        element.prev('label').addClass('required');
+                    }
                 });
         }
 
+        function setStyleOnHead(){
+            let styleElement = $('#style_js_form');
+            if (!styleElement.length){
+                $('<style>', {
+                    id: 'style_js_form',
+                    rel: 'stylesheet',
+                    html: '.js-form-init .required::after { content: "*"; color: red; margin: 0 0.3em; margin-left: 0.3em; }'
+                }).appendTo('head');
+            }
+        }
+
         function events(form) {
-            form.on('submit', function (e) {
-                e.preventDefault();
-                submit(form);
-            });
+            form
+                .on('submit', function (e) {
+                    e.preventDefault();
+                    submit(form);
+                })
+                .on('reset', function (event) {
+                    setup.onReset(event, form);
+                    trigger(form, 'resetting', [form]);
+                });
 
             if (setup.resetOnModalHidden) {
                 let modal = form.closest('.modal');
@@ -54,7 +88,7 @@
                                 class: 'invalid-feedback',
                                 html: '<i class="fa-solid fa-triangle-exclamation fa-fw me-2"></i>' + errors[inputName]
                             }).insertAfter(errorElement);
-                            errorElement.trigger('error', [errorElement, errors[inputName]]);
+                            trigger(errorElement, 'error', [errorElement, errors[inputName]]);
                         }
                     }
                 }
@@ -64,7 +98,8 @@
         function createDefaultError(form, message) {
             let modal = form.closest('.modal')
             let inModal = modal.length;
-            let alertElement = $('<div>', {
+
+             $('<div>', {
                 class: 'js-form-default-error alert alert-danger alert-dismissible fade show mb-0',
                 html: [
                     '<i class="fa-solid fa-triangle-exclamation fa-fw me-2"></i>',
@@ -74,11 +109,28 @@
             }).appendTo(inModal ? modal.find('.modal-body') : form);
         }
 
+        /**
+         *
+         * @param {$|jQuery} element
+         * @param {string} eventName
+         * @param {array|null} params
+         */
+        function trigger(element, eventName, params=null){
+            element.trigger(eventName, params);
+
+            if(element.is('form')){
+                element.trigger('any', [eventName]);
+            }
+            else{
+                element.closest('form').trigger('any', [eventName]);
+            }
+        }
+
         function submit(form) {
             let btnHtml = "";
             let submitButton = form.find('[type="submit"]');
             $.ajax({
-                url: form.attr('action'),
+                url: form.attr('action') || '',
                 method: form.attr('method').toUpperCase(),
                 data: form.serialize(),
                 dataType: 'json',
@@ -89,26 +141,26 @@
                     btnHtml = submitButton.html();
                     submitButton.html('<i class="fa-solid fa-spinner fa-spin fa-fw"></i>')
                     submitButton.prop('disabled', true).addClass('disabled');
-                    form.trigger('beforeSend', [xhr, form]);
+                    trigger(form, 'beforeSend', [xhr, form]);
                     setup.onBeforeSend(form, xhr);
                 },
                 success: function (response) {
-                    form.trigger('success', [form, response || {}]);
+                    trigger(form, 'success', [form, response || {}]);
                     setup.onSuccess(form, response || {});
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR) {
                     let errors = jqXHR.responseJSON || {};
                     setErrors(form, errors);
-                    form.trigger('error', [form, errors]);
+                    trigger(form, 'error', [form, errors, jqXHR]);
                     setup.onError(form, errors);
                 },
-                complete: function (jqXHR, textStatus) {
+                complete: function (jqXHR) {
                     let data = jqXHR.responseJSON || {};
                     submitButton
                         .prop('disabled', false)
                         .removeClass('disabled')
                         .html(btnHtml);
-                    form.trigger('complete', [form, data]);
+                    trigger(form, 'complete', [form, data]);
                     setup.onComplete(form, data);
                 }
             });
@@ -120,26 +172,32 @@
             form.find('.valid-feedback').remove();
             form.find('.invalid-feedback').remove();
             form.find('.js-form-default-error').remove();
-            form.trigger('cleared', [form]);
+            trigger(form, 'cleared',  [form]);
             setup.onCleared(form);
         }
 
         function init(form) {
             if (!form.hasClass('js-form-init')) {
                 form.attr('autocomplete', 'off');
+                setStyleOnHead();
                 setRequired(form);
                 events(form);
-                form.trigger('init', [form]);
+
                 form.addClass('js-form-init');
-                setup.onInit(form);
+
+                setTimeout(function(){
+                    setup.onInit(form);
+                    trigger(form, 'init',  [form]);
+                },0);
+
             }
         }
 
         return $(this).each(function (i, e) {
-            let form = $(this);
+            let form = $(e);
             init(form);
             return form;
         });
     };
-
+    $('[data-toggle="form"], [data-bs-toggle="form"]').form();
 }(jQuery));

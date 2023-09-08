@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="d-flex justify-content-center flex-column align-items-center my-5">
+    <h1>jQuery - Form</h1>
+    <form data-bs-toggle="form" method="post" action="">
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <input type="email" name="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"
+                   required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+            <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+        <button type="reset" class="btn btn-outline-dark">reset</button>
+        <button type="submit" class="btn btn-primary">submit</button>
+    </form>
+    <pre id="pre_events" class="d-flex flex-column text-bg-dark font-monospace p-4 mt-3" style="max-height: 400px; overflow-y:auto">
+
+    </pre>
+</div>
+<script src="../vendor/components/jquery/jquery.min.js"></script>
+<script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../dist/jquery.form.js"></script>
+<script>
+    (function($){
+        $('form')
+            .on('any', function (e, eventName) {
+                $('<span>', {text: new Date().toLocaleString() + ': '+ eventName}).prependTo('#pre_events');
+
+            });
+    }(jQuery))
+
+</script>
+</body>
+</html>
