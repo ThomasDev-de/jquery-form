@@ -149,7 +149,7 @@
                     const returnBoolean = setup.onBeforeSend(form, xhr);
                     if (returnBoolean !== undefined){
                         if(!returnBoolean){
-                            xhr.abort();
+                            xhr.done();
                         }
                     }
                 },
