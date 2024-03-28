@@ -6,8 +6,14 @@
  * @author Thomas Kirsch <t.kirsch@webcito.de>
  */
 (function ($) {
-    $.fn.form = function (options) {
-        let setup = $.extend(true, {
+    $.form = {
+        setDefaults: function (options) {
+            this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
+        },
+        getDefaults: function () {
+            return this.DEFAULTS;
+        },
+        DEFAULTS: {
             autocomplete:false,
             resetOnModalHidden: true,
             onBeforeSend: function (form, xhr) {
@@ -24,7 +30,13 @@
             },
             onInit: function (form) {
             },
-        }, options || {});
+        }
+    };
+
+    $.fn.form = function (options = null, params = null) {
+
+        const optionsSet = typeof options === 'object' && options !== null;
+        const methodCalled = !optionsSet && options !== null;
 
         const ICON_WARNING = 'bi bi-cone-striped';
         const ICON_LOADING = 'bi bi-arrow-clockwise';
@@ -57,17 +69,18 @@
         }
 
         function events(form) {
+            const settings = form.data('settings');
             form
                 .on('submit', function (e) {
                     e.preventDefault();
                     submit(form);
                 })
                 .on('reset', function (event) {
-                    setup.onReset(event, form);
+                    settings.onReset(event, form);
                     trigger(form, 'resetting', [form]);
                 });
 
-            if (setup.resetOnModalHidden) {
+            if (settings.resetOnModalHidden) {
                 let modal = form.closest('.modal');
                 if (modal.length) {
                     modal.on('hidden.bs.modal', function () {
@@ -131,6 +144,7 @@
         }
 
         function submit(form) {
+            const settings = form.data('settings');
             let btnHtml = "";
             let submitButton = form.find('[type="submit"]');
             $.ajax({
@@ -144,7 +158,7 @@
                     clear(form);
                     let aborted = false;
 
-                    const returnBoolean = setup.onBeforeSend(form, xhr);
+                    const returnBoolean = settings.onBeforeSend(form, xhr);
                     if (returnBoolean !== undefined){
                         if(!returnBoolean){
                             aborted = true;
@@ -161,13 +175,13 @@
                 },
                 success: function (response) {
                     trigger(form, 'success', [form, response || {}]);
-                    setup.onSuccess(form, response || {});
+                    settings.onSuccess(form, response || {});
                 },
                 error: function (jqXHR) {
                     let errors = jqXHR.responseJSON || {};
                     setErrors(form, errors);
                     trigger(form, 'error', [form, errors, jqXHR]);
-                    setup.onError(form, errors);
+                    settings.onError(form, errors);
                 },
                 complete: function (jqXHR) {
                     let data = jqXHR.responseJSON || {};
@@ -176,25 +190,38 @@
                         .removeClass('disabled')
                         .html(btnHtml);
                     trigger(form, 'complete', [form, data]);
-                    setup.onComplete(form, data);
+                    settings.onComplete(form, data);
                 }
             });
         }
 
 
         function clear(form) {
+            const settings = form.data('settings');
             form.find('.is-valid').removeClass('is-valid');
             form.find('.is-invalid').removeClass('is-invalid');
             form.find('.valid-feedback').remove();
             form.find('.invalid-feedback').remove();
             form.find('.js-form-default-error').remove();
             trigger(form, 'cleared',  [form]);
-            setup.onCleared(form);
+            settings.onCleared(form);
         }
 
         function init(form) {
             if (!form.hasClass('js-form-init')) {
-                if (!setup.autocomplete) {
+                // is not initialized and option set, store options on a form element
+                if (optionsSet) {
+                    const setup = $.extend({}, $.form.DEFAULTS, form.data(), options || {});
+                    form.data('settings', setup);
+                }
+                else
+                {
+                    // store default option on form element.
+                    const setup = $.extend({}, $.form.DEFAULTS, form.data());
+                    form.data('settings', setup);
+                }
+                const settings = form.data('settings');
+                if (!settings.autocomplete) {
                     form
                         .prop('autocorrect', "off")
                         .prop('autocapitalize', "off")
@@ -209,18 +236,28 @@
                 form.addClass('js-form-init');
 
                 setTimeout(function(){
-                    setup.onInit(form);
+                    settings.onInit(form);
                     trigger(form, 'init',  [form]);
                 },0);
-
             }
         }
 
         return $(this).each(function (i, e) {
-            let form = $(e);
+            const form = $(e);
             init(form);
-            return form;
+            if (methodCalled) {
+                switch (options) {
+                    case 'setErrors': {
+                        setErrors(form, params);
+                        return form;
+                    }
+                }
+            }
+            else {
+                return form;
+            }
         });
     };
+
     $('[data-toggle="form"], [data-bs-toggle="form"]').form();
 }(jQuery));

@@ -68,10 +68,15 @@ $(document)
     });
 ```
 
+## Methods
+```javascript
+const form = $('form').form('setErrors', {email: 'not valid', password: 'is required'});
+```
+
 ## ERROR HANDLING
 
 The plugin expects error messages as JSON object.  
-The key must match the input name field and the value should contain the error message.  
+The key must match the input name field, and the value should contain the error message.  
 Example:
 
 ```json
