@@ -146,7 +146,10 @@
                     submitButton.html(`<i class="${ICON_LOADING}"></i>`)
                     submitButton.prop('disabled', true).addClass('disabled');
                     trigger(form, 'beforeSend', [xhr, form]);
-                    setup.onBeforeSend(form, xhr);
+                    const returnBoolean = setup.onBeforeSend(form, xhr);
+                    if (returnBoolean !== undefined){
+                        return returnBoolean;
+                    }
                 },
                 success: function (response) {
                     trigger(form, 'success', [form, response || {}]);
