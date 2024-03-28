@@ -26,6 +26,9 @@
             },
         }, options || {});
 
+        const ICON_WARNING = 'bi bi-cone-striped';
+        const ICON_LOADING = 'bi bi-arrow-clockwise';
+
         function setRequired(form) {
             form
                 .find('input[required],textarea[required],select[required]')
@@ -87,7 +90,7 @@
                             errorElement.addClass('is-invalid');
                             $('<div>', {
                                 class: 'invalid-feedback',
-                                html: '<i class="fa-solid fa-triangle-exclamation fa-fw me-2"></i>' + errors[inputName]
+                                html: `<i class="${ICON_WARNING} me-2"></i>` + errors[inputName]
                             }).insertAfter(errorElement);
                             trigger(errorElement, 'error', [errorElement, errors[inputName]]);
                         }
@@ -103,7 +106,7 @@
              $('<div>', {
                 class: 'js-form-default-error alert alert-danger alert-dismissible fade show mb-0',
                 html: [
-                    '<i class="fa-solid fa-triangle-exclamation fa-fw me-2"></i>',
+                    `<i class="${ICON_WARNING} me-2"></i>`,
                     message,
                     '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'
                 ].join('')
@@ -140,7 +143,7 @@
                 beforeSend: function (xhr) {
                     clear(form);
                     btnHtml = submitButton.html();
-                    submitButton.html('<i class="fa-solid fa-spinner fa-spin fa-fw"></i>')
+                    submitButton.html(`<i class="${ICON_LOADING}"></i>`)
                     submitButton.prop('disabled', true).addClass('disabled');
                     trigger(form, 'beforeSend', [xhr, form]);
                     setup.onBeforeSend(form, xhr);
