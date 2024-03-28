@@ -150,7 +150,6 @@
                     if (returnBoolean !== undefined){
                         if(!returnBoolean){
                             xhr.abort();
-                            return false;
                         }
                     }
                 },
@@ -175,6 +174,7 @@
                 }
             });
         }
+
 
         function clear(form) {
             form.find('.is-valid').removeClass('is-valid');
