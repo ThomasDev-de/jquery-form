@@ -148,7 +148,10 @@
                     trigger(form, 'beforeSend', [xhr, form]);
                     const returnBoolean = setup.onBeforeSend(form, xhr);
                     if (returnBoolean !== undefined){
-                        return returnBoolean;
+                        if(!returnBoolean){
+                            xhr.abort();
+                            return false;
+                        }
                     }
                 },
                 success: function (response) {
