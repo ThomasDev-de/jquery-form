@@ -142,16 +142,22 @@
                 cache: false,
                 beforeSend: function (xhr) {
                     clear(form);
-                    btnHtml = submitButton.html();
-                    submitButton.html(`<i class="${ICON_LOADING}"></i>`)
-                    submitButton.prop('disabled', true).addClass('disabled');
-                    trigger(form, 'beforeSend', [xhr, form]);
+                    let aborted = false;
+
                     const returnBoolean = setup.onBeforeSend(form, xhr);
                     if (returnBoolean !== undefined){
                         if(!returnBoolean){
-                            xhr.done();
+                            aborted = true;
+                            xhr.abort();
                         }
                     }
+                    if(!aborted){
+                        btnHtml = submitButton.html();
+                        submitButton.html(`<i class="${ICON_LOADING}"></i>`)
+                        submitButton.prop('disabled', true).addClass('disabled');
+                    }
+
+                    trigger(form, 'beforeSend', [xhr, form, aborted]);
                 },
                 success: function (response) {
                     trigger(form, 'success', [form, response || {}]);

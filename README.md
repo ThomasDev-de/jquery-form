@@ -45,7 +45,7 @@ $(document)
     .on('error', '#form_example', function (event, $form, responseJSON, xhr) {
         // do something
     })
-    .on('beforeSend', '#form_example', function (event, xhr, $form) {
+    .on('beforeSend', '#form_example', function (event, xhr, $form, aborted) {
         // do something
     })
     .on('complete', '#form_example', function (event, $form, responseJSON) {
