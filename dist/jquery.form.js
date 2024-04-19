@@ -85,8 +85,9 @@
                         .html('.js-form-init {\n' +
                             '    label.required:before{\n' +
                             '        float: right;\n' +
-                            '        content: \' *\' !important;\n' +
+                            '        content: \'*\' !important;\n' +
                             '        color: red;\n' +
+                            '        margin-left: 5px;\n' +
                             '    }\n' +
                             '}');
                 }
