@@ -42,14 +42,23 @@
         const ICON_LOADING = 'bi bi-arrow-clockwise';
 
         function setRequired(form) {
-            form.find('label').each(function (i, l) {
-                const $label = $(l);
-                const $input = $('#' + $label.attr('for'));
+            form
+                .find('input[required],textarea[required],select[required]')
+                .each(function (i, e) {
+                    const el = $(e);
+                    if (el.is(':visible')) {
+                        form.find('[for="' + el.attr('id') + '"]').addClass('required');
+                    }
+                });
 
-                if ($input.length && $input.is(':visible') && $input.prop('required')) {
-                    $label.addClass('required');
-                }
-            });
+            // form.find('label').each(function (i, l) {
+            //     const $label = $(l);
+            //     const $input = $('#' + $label.attr('for'));
+            //
+            //     if ($input.length && $input.is(':visible') && $input.prop('required')) {
+            //         $label.addClass('required');
+            //     }
+            // });
             //
             // form
             //     .find('input[required],textarea[required],select[required]')
@@ -67,13 +76,14 @@
         }
 
         function setStyleOnHead() {
-            setTimeout(function(){
-            if (!$('#style_js_form').length) {
-                $('<style>', {
-                    id: 'style_js_form',
-                })
-                    .appendTo('head')
-                    .html('.js-form-init .required::after { content: "*" !important; color: red; margin-left: 0.3em; }');            }
+            setTimeout(function () {
+                if (!$('#style_js_form').length) {
+                    $('<style>', {
+                        id: 'style_js_form',
+                    })
+                        .appendTo('head')
+                        .html('.js-form-init .required::after { content: "*" !important; color: red; margin-left: 0.3em; }');
+                }
             }, 500); // delay of 500 milliseconds
         }
 
