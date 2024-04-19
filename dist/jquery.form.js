@@ -42,12 +42,11 @@
         const ICON_LOADING = 'bi bi-arrow-clockwise';
 
         function setRequired(form) {
-            setStyleOnHead();
             form.find('label').each(function (i, l) {
                 const $label = $(l);
                 const $input = $('#' + $label.attr('for'));
 
-                if ($input.length && input.is(':visible') && $input.prop('required')) {
+                if ($input.length && $input.is(':visible') && $input.prop('required')) {
                     $label.addClass('required');
                 }
             });
