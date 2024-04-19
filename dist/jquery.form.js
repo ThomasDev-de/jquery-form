@@ -82,7 +82,13 @@
                         id: 'style_js_form',
                     })
                         .appendTo('head')
-                        .html('.js-form-init .required::after { content: "*" !important; color: red; margin-left: 0.3em; }');
+                        .html('.js-form-init {\n' +
+                            '    label.required:before{\n' +
+                            '        float: right;\n' +
+                            '        content: \' *\' !important;\n' +
+                            '        color: red;\n' +
+                            '    }\n' +
+                            '}');
                 }
             }, 500); // delay of 500 milliseconds
         }
