@@ -14,7 +14,7 @@
             return this.DEFAULTS;
         },
         DEFAULTS: {
-            autocomplete:false,
+            autocomplete: false,
             resetOnModalHidden: true,
             onBeforeSend: function (form, xhr) {
             },
@@ -43,7 +43,7 @@
 
         function setRequired(form) {
             setStyleOnHead();
-            form.find('label').each(function(i, l) {
+            form.find('label').each(function (i, l) {
                 const $label = $(l);
                 const $input = $('#' + $label.attr('for'));
 
@@ -67,13 +67,13 @@
             //     });
         }
 
-        function setStyleOnHead(){
-            if (!$('#style_js_form').length){
+        function setStyleOnHead() {
+            if (!$('#style_js_form').length) {
                 $('<style>', {
                     id: 'style_js_form',
-                    rel: 'stylesheet',
-                    html: '.js-form-init .required::after { content: "*"; color: red; margin: 0 0.3em; margin-left: 0.3em; }'
-                }).appendTo('head');
+                })
+                    .appendTo('head')
+                    .html('.js-form-init .required::after { content: "*"; color: red; margin: 0 0.3em; margin-left: 0.3em; }');
             }
         }
 
@@ -125,7 +125,7 @@
             let modal = form.closest('.modal')
             let inModal = modal.length;
 
-             $('<div>', {
+            $('<div>', {
                 class: 'js-form-default-error alert alert-danger alert-dismissible fade show mb-0',
                 html: [
                     `<i class="${ICON_WARNING} me-2"></i>`,
@@ -141,13 +141,12 @@
          * @param {string} eventName
          * @param {array|null} params
          */
-        function trigger(element, eventName, params=null){
+        function trigger(element, eventName, params = null) {
             element.trigger(eventName, params);
 
-            if(element.is('form')){
+            if (element.is('form')) {
                 element.trigger('any', [eventName]);
-            }
-            else{
+            } else {
                 element.closest('form').trigger('any', [eventName]);
             }
         }
@@ -168,13 +167,13 @@
                     let aborted = false;
 
                     const returnBoolean = settings.onBeforeSend(form, xhr);
-                    if (returnBoolean !== undefined){
-                        if(!returnBoolean){
+                    if (returnBoolean !== undefined) {
+                        if (!returnBoolean) {
                             aborted = true;
                             xhr.abort();
                         }
                     }
-                    if(!aborted){
+                    if (!aborted) {
                         btnHtml = submitButton.html();
                         submitButton.html(`<i class="${ICON_LOADING}"></i>`)
                         submitButton.prop('disabled', true).addClass('disabled');
@@ -212,7 +211,7 @@
             form.find('.valid-feedback').remove();
             form.find('.invalid-feedback').remove();
             form.find('.js-form-default-error').remove();
-            trigger(form, 'cleared',  [form]);
+            trigger(form, 'cleared', [form]);
             settings.onCleared(form);
         }
 
@@ -222,9 +221,7 @@
                 if (optionsSet) {
                     const setup = $.extend({}, $.form.DEFAULTS, form.data(), options || {});
                     form.data('settings', setup);
-                }
-                else
-                {
+                } else {
                     // store default option on form element.
                     const setup = $.extend({}, $.form.DEFAULTS, form.data());
                     form.data('settings', setup);
@@ -244,10 +241,10 @@
 
                 form.addClass('js-form-init');
 
-                setTimeout(function(){
+                setTimeout(function () {
                     settings.onInit(form);
-                    trigger(form, 'init',  [form]);
-                },0);
+                    trigger(form, 'init', [form]);
+                }, 0);
             }
         }
 
@@ -261,8 +258,7 @@
                         return form;
                     }
                 }
-            }
-            else {
+            } else {
                 return form;
             }
         });
