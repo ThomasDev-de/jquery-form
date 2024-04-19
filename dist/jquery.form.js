@@ -67,13 +67,14 @@
         }
 
         function setStyleOnHead() {
+            setTimeout(function(){
             if (!$('#style_js_form').length) {
                 $('<style>', {
                     id: 'style_js_form',
                 })
                     .appendTo('head')
-                    .html('.js-form-init .required::after { content: "*"; color: red; margin: 0 0.3em; margin-left: 0.3em; }');
-            }
+                    .html('.js-form-init .required::after { content: "*" !important; color: red; margin-left: 0.3em; }');            }
+            }, 500); // delay of 500 milliseconds
         }
 
         function events(form) {
