@@ -42,19 +42,28 @@
         const ICON_LOADING = 'bi bi-arrow-clockwise';
 
         function setRequired(form) {
-            form
-                .find('input[required],textarea[required],select[required]')
-                .each(function (i, el) {
-                    const element = $(el);
+            form.find('label').each(function(i, l) {
+                const $label = $(l);
+                const $input = $('#' + $label.attr('for'));
 
-                    if(element.attr('id') && form.find('[for="'+element.attr('id')+'"]').length){
-                        form.find('[for="'+element.attr('id')+'"]').addClass('required');
-                    }
-
-                    else if( element.prev('label').length) {
-                        element.prev('label').addClass('required');
-                    }
-                });
+                if ($input.length && input.is(':visible') && $input.prop('required')) {
+                    $label.addClass('required');
+                }
+            });
+            //
+            // form
+            //     .find('input[required],textarea[required],select[required]')
+            //     .each(function (i, el) {
+            //         const element = $(el);
+            //
+            //         if(element.attr('id') && form.find('[for="'+element.attr('id')+'"]').length){
+            //             form.find('[for="'+element.attr('id')+'"]').addClass('required');
+            //         }
+            //
+            //         else if( element.prev('label').length) {
+            //             element.prev('label').addClass('required');
+            //         }
+            //     });
         }
 
         function setStyleOnHead(){
