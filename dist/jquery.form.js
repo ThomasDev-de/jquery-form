@@ -42,6 +42,7 @@
         const ICON_LOADING = 'bi bi-arrow-clockwise';
 
         function setRequired(form) {
+            setStyleOnHead();
             form.find('label').each(function(i, l) {
                 const $label = $(l);
                 const $input = $('#' + $label.attr('for'));
@@ -67,8 +68,7 @@
         }
 
         function setStyleOnHead(){
-            let styleElement = $('#style_js_form');
-            if (!styleElement.length){
+            if (!$('#style_js_form').length){
                 $('<style>', {
                     id: 'style_js_form',
                     rel: 'stylesheet',
