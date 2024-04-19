@@ -46,9 +46,9 @@
                 .find('input[required],textarea[required],select[required]')
                 .each(function (i, e) {
                     const el = $(e);
-                    if (el.is(':visible')) {
+                    // if (el.is(':visible')) {
                         form.find('[for="' + el.attr('id') + '"]').addClass('required');
-                    }
+                    // }
                 });
 
             // form.find('label').each(function (i, l) {
