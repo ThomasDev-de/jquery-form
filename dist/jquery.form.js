@@ -172,17 +172,18 @@
             const settings = form.data('settings');
             let btnHtml = "";
             let submitButton = form.find('[type="submit"]');
-            $.ajax({
+
+            // Prüfen, ob ein Datei-Feld im Formular vorhanden ist
+            const hasFileInput = form.find('input[type="file"]').length > 0;
+
+            let ajaxOptions = {
                 url: form.attr('action') || '',
                 method: form.attr('method').toUpperCase(),
-                data: form.serialize(),
                 dataType: 'json',
-                contentType: 'application/x-www-form-urlencoded',
                 cache: false,
                 beforeSend: function (xhr) {
                     clear(form);
                     let aborted = false;
-
                     const returnBoolean = settings.onBeforeSend(form, xhr);
                     if (returnBoolean !== undefined) {
                         if (!returnBoolean) {
@@ -192,10 +193,9 @@
                     }
                     if (!aborted) {
                         btnHtml = submitButton.html();
-                        submitButton.html(`<i class="${ICON_LOADING}"></i>`)
+                        submitButton.html(`<i class="${ICON_LOADING}"></i>`);
                         submitButton.prop('disabled', true).addClass('disabled');
                     }
-
                     trigger(form, 'beforeSend', [xhr, form, aborted]);
                 },
                 success: function (response) {
@@ -217,9 +217,20 @@
                     trigger(form, 'complete', [form, data]);
                     settings.onComplete(form, data);
                 }
-            });
-        }
+            };
 
+            if (hasFileInput) {
+                // FormData bei Datei-Feldern
+                ajaxOptions.data = new FormData(form[0]);
+                ajaxOptions.contentType = false;
+                ajaxOptions.processData = false;
+            } else {
+                ajaxOptions.data = form.serialize();
+                ajaxOptions.contentType = 'application/x-www-form-urlencoded';
+            }
+
+            $.ajax(ajaxOptions);
+        }
 
         function clear(form) {
             const settings = form.data('settings');
