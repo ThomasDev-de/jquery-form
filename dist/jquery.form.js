@@ -1,9 +1,13 @@
 // noinspection JSUnresolvedReference,JSUnusedGlobalSymbols
 
 /**
- * @version 1.00
- * @since 2022-10-28
+ * jQuery Form Plugin
+ * The easy way to handle forms with jQuery and Bootstrap
+ *
+ * @version 1.0.1
  * @author Thomas Kirsch <t.kirsch@webcito.de>
+ * @license proprietary
+ * @link https://github.com/webcito/jquery-form
  */
 (function ($) {
     $.form = {
@@ -16,7 +20,7 @@
         DEFAULTS: {
             autocomplete: false,
             resetOnModalHidden: true,
-            onBeforeSend: function (form, xhr) {
+            onBeforeSend: function (form) {
             },
             onSuccess: function (form, response) {
             },
@@ -168,7 +172,7 @@
             }
         }
 
-        function submit(form) {
+        async function submit(form) {
             const settings = form.data('settings');
             let btnHtml = "";
             let submitButton = form.find('[type="submit"]');
@@ -176,28 +180,32 @@
             // Prüfen, ob ein Datei-Feld im Formular vorhanden ist
             const hasFileInput = form.find('input[type="file"]').length > 0;
 
+            clear(form);
+
+            let aborted = false;
+            const returnBoolean = await settings.onBeforeSend(form);
+            if (returnBoolean !== undefined) {
+                if (!returnBoolean) {
+                    aborted = true;
+                }
+            }
+
+            if (aborted) {
+                trigger(form, 'beforeSend', [null, form, true]);
+                return;
+            }
+
+            btnHtml = submitButton.html();
+            submitButton.html(`<i class="${ICON_LOADING}"></i>`);
+            submitButton.prop('disabled', true).addClass('disabled');
+
+            trigger(form, 'beforeSend', [null, form, false]);
+
             let ajaxOptions = {
                 url: form.attr('action') || '',
                 method: form.attr('method').toUpperCase(),
                 dataType: 'json',
                 cache: false,
-                beforeSend: function (xhr) {
-                    clear(form);
-                    let aborted = false;
-                    const returnBoolean = settings.onBeforeSend(form, xhr);
-                    if (returnBoolean !== undefined) {
-                        if (!returnBoolean) {
-                            aborted = true;
-                            xhr.abort();
-                        }
-                    }
-                    if (!aborted) {
-                        btnHtml = submitButton.html();
-                        submitButton.html(`<i class="${ICON_LOADING}"></i>`);
-                        submitButton.prop('disabled', true).addClass('disabled');
-                    }
-                    trigger(form, 'beforeSend', [xhr, form, aborted]);
-                },
                 success: function (response) {
                     trigger(form, 'success', [form, response || {}]);
                     settings.onSuccess(form, response || {});
@@ -219,8 +227,8 @@
                 }
             };
 
+            // FormData bei Datei-Feldern
             if (hasFileInput) {
-                // FormData bei Datei-Feldern
                 ajaxOptions.data = new FormData(form[0]);
                 ajaxOptions.contentType = false;
                 ajaxOptions.processData = false;
@@ -234,13 +242,15 @@
 
         function clear(form) {
             const settings = form.data('settings');
-            form.find('.is-valid').removeClass('is-valid');
-            form.find('.is-invalid').removeClass('is-invalid');
-            form.find('.valid-feedback').remove();
-            form.find('.invalid-feedback').remove();
-            form.find('.js-form-default-error').remove();
-            trigger(form, 'cleared', [form]);
-            settings.onCleared(form);
+            if (settings) {
+                form.find('.is-valid').removeClass('is-valid');
+                form.find('.is-invalid').removeClass('is-invalid');
+                form.find('.valid-feedback').remove();
+                form.find('.invalid-feedback').remove();
+                form.find('.js-form-default-error').remove();
+                trigger(form, 'cleared', [form]);
+                settings.onCleared(form);
+            }
         }
 
         function init(form) {

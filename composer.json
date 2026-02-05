@@ -1,16 +1,31 @@
 {
   "name": "webcito/jquery-form",
-  "description": "the easy way to handle forms",
-  "minimum-stability": "stable",
+  "description": "The easy way to handle forms with jQuery and Bootstrap",
+  "type": "library",
+  "keywords": [
+    "jquery",
+    "form",
+    "ajax",
+    "bootstrap",
+    "validation"
+  ],
   "license": "proprietary",
   "authors": [
     {
-      "name": "thomas",
-      "email": "t.kirsch@webcito.de"
+      "name": "Thomas Kirsch",
+      "email": "t.kirsch@webcito.de",
+      "role": "Developer"
     }
   ],
   "require": {
+    "php": ">=7.4",
     "components/jquery": "^3",
     "twbs/bootstrap": "^5"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    },
+    "sort-packages": true
   }
 }

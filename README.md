@@ -1,32 +1,62 @@
 # jquery-form
 
-A jQuery plugin for forms
+A lightweight jQuery plugin to easily handle forms with AJAX and Bootstrap (>= 5.0).
+
+## FEATURES
+
+- Automatic AJAX handling (Submit & Reset)
+- Integration with Bootstrap validation styles (`is-invalid`, `invalid-feedback`)
+- Support for asynchronous pre-checks (`onBeforeSend` with Promise/async)
+- Automatic handling of file uploads (`FormData`)
+- Support for data attributes for automatic initialization
+- Extensive callbacks and events
 
 ## REQUIREMENTS
 
-- bootstrap >= 5.0
-- jQuery >= 3.6
+- [Bootstrap](https://getbootstrap.com/) >= 5.0
+- [jQuery](https://jquery.com/) >= 3.6
+
+## INSTALLATION
+
+### Composer
+```bash
+composer require webcito/jquery-form
+```
+
+### Manual
+Include the `dist/jquery.form.js` file in your project:
+```html
+<script src="path/to/dist/jquery.form.js"></script>
+```
 
 ## USAGE
 
-```html
-<form action="/path/to/action" method="post" id="form_example">
-    <input type="text" required class="form-control" name="name">
-</form>
+### Automatic initialization via Data Attributes
+The plugin automatically initializes for forms with `data-bs-toggle="form"`.
 
-<script src="dist/jquery.form.js"></script>
-<script>
-    $('#form_example').form(options);
-</script>
+```html
+<form action="/path/to/api" method="post" data-bs-toggle="form">
+    <input type="text" name="name" required class="form-control">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+```
+
+### Manual initialization via JavaScript
+```javascript
+$('#form_example').form({
+    onSuccess: function(form, response) {
+        console.log('Success!', response);
+    }
+});
 ```
 
 ## OPTIONS
 
-```js
+```javascript
 const DEFAULTS = {
-    autocomplete: false, // Sets all input fields to autocomplete off
-    resetOnModalHidden: true, // If the form element is in a modal, it will be reset after the modal is hidden
-    onBeforeSend: function(form, xhr){},
+    autocomplete: false,        // Disables autocomplete for all fields
+    resetOnModalHidden: true,   // Resets the form when a surrounding modal is closed
+    onBeforeSend: async function(form){}, // Called before sending (supports async)
     onSuccess: function(form, response){},
     onError: function(form, errors){},
     onComplete: function(form, response){},
@@ -36,55 +66,74 @@ const DEFAULTS = {
 }
 ```
 
+### Special Case: `onBeforeSend`
+`onBeforeSend` can be `async` or return a Promise. If the function explicitly returns `false`, the submission process is aborted.
+
+```javascript
+onBeforeSend: async function(form) {
+    const result = await myConfirmationDialog();
+    return result; // If result === false, the form will not be submitted
+}
+```
+
 ## EVENTS
+
+The plugin triggers events on the form element.
+
 ```javascript
 $(document)
     .on('success', '#form_example', function (event, $form, responseJSON) {
-        // do something
+        // Successfully sent
     })
     .on('error', '#form_example', function (event, $form, responseJSON, xhr) {
-        // do something
+        // Error during sending or validation error
     })
     .on('beforeSend', '#form_example', function (event, xhr, $form, aborted) {
-        // do something
+        // Before sending (xhr is null for async abortion)
     })
     .on('complete', '#form_example', function (event, $form, responseJSON) {
-        // do something
+        // Request completed (success or error)
     })
     .on('cleared', '#form_example', function (event, $form) {
-        // do something
-    })
-    .on('resetting', '#form_example', function (event, $form) {
-        // do something
+        // Validation markers have been removed
     })
     .on('init', '#form_example', function (event, $form) {
-        // do something
+        // Plugin initialized
     })
     .on('error', '#form_example [name="name"]', function (e, $inputElement, message) {
-        // do something
+        // Specific error for an input field
     })
     .on('any', '#form_example', function (e, eventName) {
-        // do something
+        // Fired on every event above
     });
 ```
 
-## Methods
+## METHODS
+
+### setErrors
+Manually sets errors for specific fields.
+
 ```javascript
-const form = $('form').form('setErrors', {email: 'not valid', password: 'is required'});
+$('form').form('setErrors', {
+    email: 'Email address is already taken',
+    password: 'Password is too short'
+});
 ```
 
 ## ERROR HANDLING
 
-The plugin expects error messages as JSON object.  
-The key must match the input name field, and the value should contain the error message.  
-Example:
+The plugin expects error responses as a JSON object. The key must correspond to the `name` attribute of the input.
 
 ```json
 {
-  "first_name": "This field must not be empty",
-  "email": "This is not a valid email address",
-  "password_repeat": "The password repetition does not match"
+  "email": "Invalid email address",
+  "password": "Required field"
 }
 ```
-If the errors are returned properly, the plugin will bring up the error messages in the correct place   
-and the input fields will be marked as invalid.
+If the key `"default"` is used, a global error message (Bootstrap Alert) is displayed in the form.
+
+```json
+{
+  "default": "An unknown error has occurred."
+}
+```
