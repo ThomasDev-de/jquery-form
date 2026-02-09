@@ -1,6 +1,6 @@
 # jQuery Form Plugin
 
-[![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](https://github.com/webcito/jquery-form)
+[![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](https://github.com/webcito/jquery-form)
 [![License](https://img.shields.io/badge/license-proprietary-orange.svg)](LICENSE)
 [![jQuery](https://img.shields.io/badge/jquery-%3E%3D%203.6-blue.svg)](https://jquery.com/)
 [![Bootstrap](https://img.shields.io/badge/bootstrap-%3E%3D%205.0-purple.svg)](https://getbootstrap.com/)
@@ -105,34 +105,34 @@ $('#uploadForm').form({
 
 ## ⚡ Events API
 
-The plugin triggers native-like jQuery events for deep integration. Events can be listened to on the form element or via delegation.
+The plugin triggers namespaced events (`.bs.form`) for deep integration. Events can be listened to on the form element or via delegation.
 
 ### Form Events
 
 | Event | Parameters | Description |
 | :--- | :--- | :--- |
-| `init` | `event, $form` | Triggered after initialization. |
-| `beforeSend` | `event, $form, aborted` | Before AJAX request. `aborted` is true if `onBeforeSend` returned false. |
-| `progress` | `event, $form, progress` | Upload progress (0-100). |
-| `success` | `event, $form, response` | On successful AJAX response. |
-| `error` | `event, $form, errors, jqXHR` | On AJAX error or validation failure. |
-| `complete` | `event, $form, response` | After request completion (success or error). |
-| `cleared` | `event, $form` | Triggered when validation states are removed. |
-| `resetting` | `event, $form` | Triggered on form reset. |
-| `any` | `event, eventName` | Special event triggered for every plugin action. |
+| `init.bs.form` | `event, $form` | Triggered after initialization. |
+| `beforeSend.bs.form` | `event, $form, aborted` | Before AJAX request. `aborted` is true if `onBeforeSend` returned false. |
+| `progress.bs.form` | `event, $form, progress` | Upload progress (0-100). |
+| `success.bs.form` | `event, $form, response` | On successful AJAX response. |
+| `error.bs.form` | `event, $form, errors, jqXHR` | On AJAX error or validation failure. |
+| `complete.bs.form` | `event, $form, response` | After request completion (success or error). |
+| `cleared.bs.form` | `event, $form` | Triggered when validation states are removed. |
+| `resetting.bs.form` | `event, $form` | Triggered on form reset. |
+| `any.bs.form` | `event, eventName` | Special event triggered for every plugin action. |
 
 ### Field Events
 
 | Event | Parameters | Description |
 | :--- | :--- | :--- |
-| `error` | `event, $field, message` | Triggered on a specific input field when it receives an error. |
+| `error.bs.form` | `event, $field, message` | Triggered on a specific input field when it receives an error. |
 
 ```javascript
-$(document).on('success', '#my-form', function(event, $form, response) {
+$(document).on('success.bs.form', '#my-form', function(event, $form, response) {
     console.log('Server response:', response);
 });
 
-$(document).on('error', 'input', function(event, $field, message) {
+$(document).on('error.bs.form', 'input', function(event, $field, message) {
     console.warn(`Validation failed for ${$field.attr('name')}: ${message}`);
 });
 ```

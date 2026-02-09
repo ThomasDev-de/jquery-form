@@ -1,3 +1,10 @@
+### [1.0.3] - 2026-02-09
+
+#### Changes
+- Fixed and unified event namespace usage (`.bs.form`).
+- Updated documentation in `README.md` to reflect namespaced events.
+- Code style improvements for event triggers.
+
 ### [1.0.2] - 2026-02-09
 
 #### Changes

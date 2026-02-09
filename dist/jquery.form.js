@@ -4,12 +4,14 @@
  * jQuery Form Plugin
  * The easy way to handle forms with jQuery and Bootstrap
  *
- * @version 1.0.2
+ * @version 1.0.3
  * @author Thomas Kirsch <t.kirsch@webcito.de>
  * @license proprietary
  * @link https://github.com/webcito/jquery-form
  */
 (function ($) {
+
+    const namespace = '.bs.form'
     $.form = {
         setDefaults: function (options) {
             this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
@@ -57,28 +59,6 @@
                     // }
                 });
 
-            // form.find('label').each(function (i, l) {
-            //     const $label = $(l);
-            //     const $input = $('#' + $label.attr('for'));
-            //
-            //     if ($input.length && $input.is(':visible') && $input.prop('required')) {
-            //         $label.addClass('required');
-            //     }
-            // });
-            //
-            // form
-            //     .find('input[required],textarea[required],select[required]')
-            //     .each(function (i, el) {
-            //         const element = $(el);
-            //
-            //         if(element.attr('id') && form.find('[for="'+element.attr('id')+'"]').length){
-            //             form.find('[for="'+element.attr('id')+'"]').addClass('required');
-            //         }
-            //
-            //         else if( element.prev('label').length) {
-            //             element.prev('label').addClass('required');
-            //         }
-            //     });
         }
 
         function setStyleOnHead() {
@@ -103,11 +83,11 @@
         function events(form) {
             const settings = form.data('settings');
             form
-                .on('submit', function (e) {
+                .on('submit' + namespace, function (e) {
                     e.preventDefault();
                     submit(form);
                 })
-                .on('reset', function (event) {
+                .on('reset' + namespace, function (event) {
                     settings.onReset(event, form);
                     trigger(form, 'resetting', [form]);
                 });
@@ -165,12 +145,12 @@
          * @param {array|null} params
          */
         function trigger(element, eventName, params = null) {
-            element.trigger(eventName, params);
+            element.trigger(eventName + namespace, params);
 
             if (element.is('form')) {
-                element.trigger('any', [eventName]);
+                element.trigger('any' + namespace, [eventName]);
             } else {
-                element.closest('form').trigger('any', [eventName]);
+                element.closest('form').trigger('any' + namespace, [eventName]);
             }
         }
 
