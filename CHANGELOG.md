@@ -1,3 +1,10 @@
+### [1.0.2] - 2026-02-09
+
+#### Changes
+- Updated version number to 1.0.2.
+- Added file upload support with progress tracking (from previous updates).
+- Enhanced documentation with full Events and Methods API.
+
 ### [1.0.1] - 2026-02-05
 
 #### Problem

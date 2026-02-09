@@ -4,7 +4,7 @@
  * jQuery Form Plugin
  * The easy way to handle forms with jQuery and Bootstrap
  *
- * @version 1.0.1
+ * @version 1.0.2
  * @author Thomas Kirsch <t.kirsch@webcito.de>
  * @license proprietary
  * @link https://github.com/webcito/jquery-form
@@ -33,6 +33,8 @@
             onReset: function (form) {
             },
             onInit: function (form) {
+            },
+            onProgress: function (form, progress) {
             },
         }
     };
@@ -224,6 +226,17 @@
                         .html(btnHtml);
                     trigger(form, 'complete', [form, data]);
                     settings.onComplete(form, data);
+                },
+                xhr: function () {
+                    let xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            let percentComplete = (evt.loaded / evt.total) * 100;
+                            trigger(form, 'progress', [form, percentComplete]);
+                            settings.onProgress(form, percentComplete);
+                        }
+                    }, false);
+                    return xhr;
                 }
             };
 
