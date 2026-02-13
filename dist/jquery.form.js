@@ -200,18 +200,18 @@
                 trigger(form, 'complete', [form, data]);
                 settings.onComplete(form, data);
             },
-        xhr: function () {
-                    let xhr = new window.XMLHttpRequest();
-                    xhr.upload.addEventListener("progress", function (evt) {
-                        if (evt.lengthComputable) {
-                            let percentComplete = (evt.loaded / evt.total) * 100;
-                            trigger(form, 'progress', [form, percentComplete]);
-                            settings.onProgress(form, percentComplete);
-                        }
-                    }, false);
-                    return xhr;
-                }
-            };
+            xhr: function () {
+                let xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        let percentComplete = (evt.loaded / evt.total) * 100;
+                        trigger(form, 'progress', [form, percentComplete]);
+                        settings.onProgress(form, percentComplete);
+                    }
+                }, false);
+                return xhr;
+            }
+        };
 
         // FormData bei Datei-Feldern
         if (hasFileInput) {
