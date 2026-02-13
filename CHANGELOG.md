@@ -1,3 +1,13 @@
+### [1.0.4] - 2026-02-13
+
+#### Changes
+- **Version bump**: Updated all version references to 1.0.4.
+
+### [1.0.3] - 2026-02-13
+
+#### Changes
+- **Bugfixes**: Minor stability improvements.
+
 ### [1.0.2] - 2026-02-13
 
 #### Changes

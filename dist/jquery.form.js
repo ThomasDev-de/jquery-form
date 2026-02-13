@@ -12,7 +12,7 @@
 
     const namespace = '.bs.form'
     $.form = {
-        version: '1.0.2',
+        version: '1.0.4',
         setDefaults: function (options) {
             this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
         },

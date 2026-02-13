@@ -1,6 +1,6 @@
 # jQuery Form Plugin
 
-[![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](https://github.com/webcito/jquery-form)
+[![Version](https://img.shields.io/badge/version-1.0.4-blue.svg)](https://github.com/webcito/jquery-form)
 [![License](https://img.shields.io/badge/license-proprietary-orange.svg)](LICENSE)
 [![jQuery](https://img.shields.io/badge/jquery-%3E%3D%203.6-blue.svg)](https://jquery.com/)
 [![Bootstrap](https://img.shields.io/badge/bootstrap-%3E%3D%205.0-purple.svg)](https://getbootstrap.com/)
