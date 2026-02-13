@@ -4,12 +4,13 @@
  * jQuery Form Plugin
  * The easy way to handle forms with jQuery and Bootstrap
  *
- * @version 1.0.2
  * @author Thomas Kirsch <t.kirsch@webcito.de>
  * @license proprietary
  * @link https://github.com/webcito/jquery-form
  */
 (function ($) {
+
+    const namespace = '.bs.form'
     $.form = {
         version: '1.0.2',
         setDefaults: function (options) {
@@ -34,6 +35,8 @@
             onReset: function (form) {
             },
             onInit: function (form) {
+            },
+            onProgress: function (form, progress) {
             },
         }
     };
@@ -74,11 +77,11 @@
     function events(form) {
         const settings = form.data('settings');
         form
-            .on('submit', function (e) {
+            .on('submit' + namespace, function (e) {
                 e.preventDefault();
                 submit(form);
             })
-            .on('reset', function (event) {
+            .on('reset' + namespace, function (event) {
                 settings.onReset(event, form);
                 trigger(form, 'resetting', [form]);
             });
@@ -135,12 +138,12 @@
      * @param {array|null} params
      */
     function trigger(element, eventName, params = null) {
-        element.trigger(eventName, params);
+        element.trigger(eventName + namespace, params);
 
         if (element.is('form')) {
-            element.trigger('any', [eventName]);
+            element.trigger('any' + namespace, [eventName]);
         } else {
-            element.closest('form').trigger('any', [eventName]);
+            element.closest('form').trigger('any' + namespace, [eventName]);
         }
     }
 
@@ -196,8 +199,19 @@
                     .html(btnHtml);
                 trigger(form, 'complete', [form, data]);
                 settings.onComplete(form, data);
-            }
-        };
+            },
+        xhr: function () {
+                    let xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            let percentComplete = (evt.loaded / evt.total) * 100;
+                            trigger(form, 'progress', [form, percentComplete]);
+                            settings.onProgress(form, percentComplete);
+                        }
+                    }, false);
+                    return xhr;
+                }
+            };
 
         // FormData bei Datei-Feldern
         if (hasFileInput) {
