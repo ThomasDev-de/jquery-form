@@ -1,3 +1,16 @@
+### [1.0.2] - 2026-02-13
+
+#### Changes
+- **Initialization**:
+    - Improved support for initializing multiple elements at the same time (`$('.forms').form()`) through correct iteration.
+    - Removed redundant jQuery wrappers and switched to idiomatic chaining patterns (`return this.each(...)`).
+- **Error Handling & Stability**:
+    - Fallback for the form method (`POST` as default) if the `method` attribute is missing.
+    - Global error messages via bootstrap alert when using the `"default"` key in the error JSON.
+    - Automatic reset of the form when closing a bootstrap modal (configurable via `resetOnModalHidden`).
+- **Refactoring**:
+    - Helper functions (`submit`, `clear`, `setErrors` etc.) have been moved to the outer plugin scope to save memory and increase performance.
+
 ### [1.0.1] - 2026-02-05
 
 #### Problem

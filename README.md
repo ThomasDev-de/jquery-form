@@ -2,6 +2,8 @@
 
 A lightweight jQuery plugin to easily handle forms with AJAX and Bootstrap (>= 5.0).
 
+[changelog](CHANGELOG.md)
+
 ## FEATURES
 
 - Automatic AJAX handling (Submit & Reset)
@@ -31,8 +33,8 @@ Include the `dist/jquery.form.js` file in your project:
 
 ## USAGE
 
-### Automatic initialization via Data Attributes
-The plugin automatically initializes for forms with `data-bs-toggle="form"`.
+### Automatische Initialisierung via Data Attributes
+Das Plugin initialisiert sich automatisch für Formulare mit `data-bs-toggle="form"` oder `data-toggle="form"`. Dies geschieht dank eines MutationObservers sofort beim Laden der Seite sowie für alle später (z.B. per AJAX) hinzugefügten Formulare. Bei Massen-Operationen wird die Initialisierung performant gebündelt (Debouncing).
 
 ```html
 <form action="/path/to/api" method="post" data-bs-toggle="form">
