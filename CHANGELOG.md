@@ -1,3 +1,8 @@
+### [1.0.5] - 2026-03-20
+
+#### Changes
+- **new option**: setErrorsOnElements added to allow setting errors on specific form elements.
+
 ### [1.0.4] - 2026-02-13
 
 #### Changes

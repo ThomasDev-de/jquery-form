@@ -12,7 +12,7 @@
 
     const namespace = '.bs.form'
     $.form = {
-        version: '1.0.4',
+        version: '1.0.5',
         setDefaults: function (options) {
             this.DEFAULTS = $.extend({}, this.DEFAULTS, options || {});
         },
@@ -21,6 +21,7 @@
         },
         DEFAULTS: {
             autocomplete: false,
+            setErrorsOnElements: true,
             resetOnModalHidden: true,
             onBeforeSend: function (form) {
             },
@@ -187,7 +188,9 @@
             },
             error: function (jqXHR) {
                 let errors = jqXHR.responseJSON || {};
-                setErrors(form, errors);
+                if (settings.setErrorsOnElements) {
+                    setErrors(form, errors);
+                }
                 trigger(form, 'error', [form, errors, jqXHR]);
                 settings.onError(form, errors);
             },
